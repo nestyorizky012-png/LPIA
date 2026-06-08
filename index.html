@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplikasi asesmen interaktif untuk siswa SMP berbasis Assessment for Learning dan Assessment as Learning dengan pendekatan Deep Learning. Download gratis untuk Android.">
+  <meta name="keywords" content="asesmen, pendidikan, SMP, Assessment for Learning, Deep Learning, aplikasi pendidikan">
+  <title>Integrated Asesment — Asesmen Bermakna untuk Pembelajaran yang Lebih Dalam</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==================== RESET & BASE ==================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #5E35B1;
+      --primary-dark: #311B92;
+      --primary-light: #7E57C2;
+      --primary-bg: rgba(94, 53, 177, 0.06);
+      --accent: #4ADE80;
+      --accent-dark: #22C55E;
+      --bg: #FAFAF8;
+      --bg-hero: #F4FAF9;
+      --text: #1C1C1E;
+      --text-secondary: #52525B;
+      --text-muted: #71717A;
+      --surface: #FFFFFF;
+      --border: #E4E4E7;
+      --border-light: #F0F0F2;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --font-heading: 'Source Serif 4', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --container: 1200px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==================== ANIMATIONS ==================== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(94, 53, 177, 0.3); }
+      50% { box-shadow: 0 0 0 12px rgba(94, 53, 177, 0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s var(--transition), transform 0.7s var(--transition);
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==================== NAVBAR ==================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: all var(--transition);
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 10px 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .navbar-brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      padding: 8px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      background: var(--primary-bg);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+
+    .hamburger:hover { background: var(--primary-bg); }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      position: relative;
+      padding: 140px 0 80px;
+      background: var(--bg-hero);
+      overflow: hidden;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(94, 53, 177, 0.07) 1px, transparent 1px);
+      background-size: 28px 28px;
+      animation: dotPulse 6s ease-in-out infinite;
+    }
+
+    .hero-shape-1 {
+      position: absolute;
+      top: -60px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(74, 222, 128, 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-shape-2 {
+      position: absolute;
+      bottom: -80px;
+      left: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(94, 53, 177, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 .text-gradient {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(94, 53, 177, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(94, 53, 177, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-bg);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .hero-stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Phone Mockup */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .phone-mockup {
+      position: relative;
+      width: 280px;
+      height: 560px;
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 40px;
+      border: 3px solid #333;
+      box-shadow: var(--shadow-xl), inset 0 0 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 18px 18px;
+      z-index: 2;
+    }
+
+    .phone-screen {
+      position: absolute;
+      inset: 12px;
+      background: linear-gradient(180deg, #5E35B1 0%, #7E57C2 40%, #A7F3D0 100%);
+      border-radius: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 40px 20px;
+    }
+
+    .phone-screen-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .phone-screen-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .phone-screen-text {
+      text-align: center;
+      color: white;
+    }
+
+    .phone-screen-text h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .phone-screen-text p {
+      font-size: 0.72rem;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+
+    .phone-screen-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .phone-card {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .phone-card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone-card-icon svg {
+      width: 16px;
+      height: 16px;
+      color: white;
+    }
+
+    .phone-card-text {
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .phone-card-sub {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.6rem;
+    }
+
+    /* Floating badges around phone */
+    .floating-badge {
+      position: absolute;
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      animation: float 5s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    .floating-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .floating-badge-1 {
+      top: 60px;
+      right: -10px;
+      animation-delay: 0s;
+    }
+
+    .floating-badge-2 {
+      bottom: 120px;
+      left: -20px;
+      animation-delay: 1.5s;
+    }
+
+    .floating-badge-3 {
+      bottom: 40px;
+      right: 0px;
+      animation-delay: 3s;
+    }
+
+    /* ==================== SECTION COMMON ==================== */
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .section-label svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ==================== FEATURES ==================== */
+    .features {
+      background: var(--surface);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .feature-card {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: transparent;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .feature-icon-1 {
+      background: rgba(94, 53, 177, 0.1);
+      color: var(--primary);
+    }
+
+    .feature-icon-2 {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--accent-dark);
+    }
+
+    .feature-icon-3 {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3B82F6;
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 16px;
+      padding: 4px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* ==================== DOWNLOAD GUIDE ==================== */
+    .guide {
+      background: var(--bg);
+      position: relative;
+    }
+
+    .guide-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .guide-steps::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      right: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .step-card {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 18px;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step-card.visible .step-number {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px rgba(94, 53, 177, 0.3);
+    }
+
+    .step-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 14px;
+      border-radius: var(--radius-sm);
+      background: var(--primary-bg);
+      color: var(--primary);
+    }
+
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .step-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .step-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .guide-footer {
+      text-align: center;
+    }
+
+    .guide-footer .btn {
+      margin-bottom: 16px;
+    }
+
+    .guide-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .guide-note span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .guide-note svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ==================== MODAL ==================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      max-width: 640px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: scale(0.9) translateY(20px);
+      transition: transform var(--transition);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 0;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .modal-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      color: var(--text-secondary);
+    }
+
+    .modal-close:hover {
+      background: #FEE2E2;
+      color: #EF4444;
+    }
+
+    .modal-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .modal-body {
+      padding: 24px 28px 28px;
+    }
+
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .accordion-item.active {
+      border-color: var(--primary);
+      box-shadow: 0 2px 12px rgba(94, 53, 177, 0.1);
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg);
+      transition: all var(--transition);
+    }
+
+    .accordion-trigger:hover {
+      background: var(--primary-bg);
+    }
+
+    .accordion-item.active .accordion-trigger {
+      background: var(--primary-bg);
+      color: var(--primary);
+    }
+
+    .accordion-trigger svg {
+      width: 18px;
+      height: 18px;
+      transition: transform var(--transition);
+      color: var(--text-muted);
+    }
+
+    .accordion-item.active .accordion-trigger svg {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 500px;
+    }
+
+    .accordion-inner {
+      padding: 0 20px 20px;
+    }
+
+    .accordion-inner ol {
+      padding-left: 20px;
+    }
+
+    .accordion-inner li {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 4px;
+    }
+
+    .modal-note {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: #ECFDF5;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-dark);
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      line-height: 1.6;
+    }
+
+    .modal-note svg {
+      width: 16px;
+      height: 16px;
+      display: inline;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* ==================== ABOUT ==================== */
+    .about {
+      background: var(--surface);
+    }
+
+    .about-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-text {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .about-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      background: var(--primary-bg);
+      border: 1px solid rgba(94, 53, 177, 0.15);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .chip svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .about-researcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+    }
+
+    .about-researcher-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .about-researcher-info {
+      text-align: left;
+    }
+
+    .about-researcher-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .about-researcher-role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      background: #0C1318;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 60px 0 32px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      max-width: 320px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .footer-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+    }
+
+    .footer-logo span {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .footer-links h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.6);
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 1024px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+      }
+
+      .hero-subtitle { margin-left: auto; margin-right: auto; }
+      .hero-cta { justify-content: center; }
+      .hero-stats { justify-content: center; }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .phone-mockup {
+        width: 220px;
+        height: 440px;
+      }
+
+      .floating-badge { display: none; }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .guide-steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .guide-steps::before { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 280px;
+        background: var(--surface);
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 40px 24px;
+        box-shadow: var(--shadow-xl);
+        transition: right var(--transition);
+        z-index: 999;
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+
+      .nav-links a {
+        font-size: 1.05rem;
+        padding: 14px 20px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .hamburger { display: flex; }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-steps {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .step-card {
+        display: flex;
+        align-items: flex-start;
+        text-align: left;
+        gap: 18px;
+      }
+
+      .step-number { flex-shrink: 0; margin-bottom: 0; }
+      .step-icon { margin: 0 0 8px; }
+
+      .hero {
+        padding: 120px 0 60px;
+        min-height: auto;
+      }
+
+      .hero h1 { font-size: 1.9rem; }
+
+      .btn {
+        padding: 12px 22px;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+      }
+
+      .section { padding: 72px 0; }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-brand { max-width: 100%; }
+    }
+
+    /* Mobile overlay when nav open */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+    }
+
+    .nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* Focus states */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi utama">
+    <div class="container">
+      <a href="#beranda" class="navbar-brand" aria-label="Integrated Asesment - Beranda">
+        <img src="logo.png" alt="Logo Integrated Asesment" width="36" height="36">
+        <span>Integrated Asesment</span>
+      </a>
+      <ul class="nav-links" id="navLinks" role="menubar">
+        <li role="none"><a href="#beranda" role="menuitem">Beranda</a></li>
+        <li role="none"><a href="#fitur" role="menuitem">Fitur</a></li>
+        <li role="none"><a href="#panduan" role="menuitem">Panduan</a></li>
+        <li role="none"><a href="#tentang" role="menuitem">Tentang</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <main>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="beranda" aria-label="Hero section">
+      <div class="hero-bg-pattern"></div>
+      <div class="hero-shape-1"></div>
+      <div class="hero-shape-2"></div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 002-2v-5"/></svg>
+            Asesmen Pendidikan SMP
+          </div>
+          <h1>
+            Belajar Lebih Dalam dengan
+            <span class="text-gradient">Asesmen yang Bermakna</span>
+          </h1>
+          <p class="hero-subtitle">
+            Aplikasi asesmen interaktif berbasis Assessment for Learning (AfL) & Assessment as Learning (AaL) dengan pendekatan Deep Learning — dirancang khusus untuk siswa SMP.
+          </p>
+          <div class="hero-cta">
+            <a href="[URL_APK]" class="btn btn-primary" id="btn-download-hero">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Aplikasi Siswa
+            </a>
+            <a href="[URL_WEB_GURU]" class="btn btn-secondary" id="btn-guru-hero" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              Masuk sebagai Guru
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-value">4 Fase</span>
+              <span class="hero-stat-label">Pengerjaan Soal</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">Two-Tier</span>
+              <span class="hero-stat-label">Tipe Asesmen</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">Gratis</span>
+              <span class="hero-stat-label">Untuk Siswa</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-screen-logo">
+                <img src="logo.png" alt="Logo aplikasi">
+              </div>
+              <div class="phone-screen-text">
+                <h3>Integrated Asesment</h3>
+                <p>Asesmen Bermakna untuk<br>Pembelajaran Lebih Dalam</p>
+              </div>
+              <div class="phone-screen-cards">
+                <div class="phone-card">
+                  <div class="phone-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  </div>
+                  <div>
+                    <div class="phone-card-text">Soal Interaktif</div>
+                    <div class="phone-card-sub">Two-Tier Assessment</div>
+                  </div>
+                </div>
+                <div class="phone-card">
+                  <div class="phone-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  </div>
+                  <div>
+                    <div class="phone-card-text">Feedback Otomatis</div>
+                    <div class="phone-card-sub">Umpan balik langsung</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="floating-badge floating-badge-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Feedback Instan
+          </div>
+          <div class="floating-badge floating-badge-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#5E35B1" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            Deep Learning
+          </div>
+          <div class="floating-badge floating-badge-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Portofolio Digital
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FEATURES ==================== -->
+    <section class="section features" id="fitur" aria-label="Fitur unggulan">
+      <div class="container">
+        <div class="section-header animate-on-scroll">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Fitur Unggulan
+          </div>
+          <h2 class="section-title">Dirancang untuk Pembelajaran yang Bermakna</h2>
+          <p class="section-desc">
+            Setiap fitur dirancang berdasarkan riset pendidikan untuk membantu siswa belajar secara lebih mendalam dan reflektif.
+          </p>
+        </div>
+        <div class="features-grid">
+          <!-- Feature 1 -->
+          <article class="feature-card animate-on-scroll" style="transition-delay: 0.1s">
+            <div class="feature-icon feature-icon-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <h3>Asesmen Interaktif</h3>
+            <p>Soal Two-Tier dengan 4 fase pengerjaan yang mendalam — menguji tidak hanya jawaban, tetapi juga alasan di balik setiap pilihan.</p>
+            <div class="feature-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              4 Fase Pengerjaan
+            </div>
+          </article>
+
+          <!-- Feature 2 -->
+          <article class="feature-card animate-on-scroll" style="transition-delay: 0.2s">
+            <div class="feature-icon feature-icon-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h3>Feedback Otomatis</h3>
+            <p>Umpan balik langsung setelah setiap jawaban — siswa langsung tahu posisi pemahaman mereka dan area yang perlu diperbaiki.</p>
+            <div class="feature-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+              Umpan Balik Instan
+            </div>
+          </article>
+
+          <!-- Feature 3 -->
+          <article class="feature-card animate-on-scroll" style="transition-delay: 0.3s">
+            <div class="feature-icon feature-icon-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3>Portofolio Digital</h3>
+            <p>Pantau perkembangan belajar dari waktu ke waktu — setiap hasil asesmen tersimpan dan bisa diakses kapan saja.</p>
+            <div class="feature-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Pantau Progress
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DOWNLOAD GUIDE ==================== -->
+    <section class="section guide" id="panduan" aria-label="Panduan download dan instalasi">
+      <div class="container">
+        <div class="section-header animate-on-scroll">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Panduan Instalasi
+          </div>
+          <h2 class="section-title">Cara Download & Install Aplikasi Siswa</h2>
+          <p class="section-desc">
+            Ikuti langkah mudah berikut untuk menginstall aplikasi di HP Android kamu.
+          </p>
+        </div>
+
+        <div class="guide-steps">
+          <!-- Step 1 -->
+          <div class="step-card animate-on-scroll" style="transition-delay: 0.1s">
+            <div class="step-number">1</div>
+            <div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <h4>Buka Landing Page</h4>
+              <p>Buka halaman ini di browser HP Android kamu.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card animate-on-scroll" style="transition-delay: 0.2s">
+            <div class="step-number">2</div>
+            <div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </div>
+              <h4>Download APK</h4>
+              <p>Tap tombol "Download Aplikasi Siswa" dan tunggu file terunduh.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card animate-on-scroll" style="transition-delay: 0.3s">
+            <div class="step-number">3</div>
+            <div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              </div>
+              <h4>Izinkan Instalasi</h4>
+              <p>Buka Pengaturan → Keamanan → aktifkan "Instal dari sumber tidak dikenal".</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-card animate-on-scroll" style="transition-delay: 0.4s">
+            <div class="step-number">4</div>
+            <div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <h4>Install & Login</h4>
+              <p>Buka file APK → Install → Buka aplikasi → Login dengan akun Google.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-footer animate-on-scroll">
+          <button class="btn btn-secondary" id="btn-panduan-lengkap" onclick="openModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            Lihat Panduan Lengkap
+          </button>
+          <div class="guide-note">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              Hanya Android
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              ~25 MB
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Gratis
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section class="section about" id="tentang" aria-label="Tentang aplikasi">
+      <div class="container">
+        <div class="section-header animate-on-scroll">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Tentang
+          </div>
+          <h2 class="section-title">Tentang Aplikasi</h2>
+        </div>
+        <div class="about-content animate-on-scroll">
+          <p class="about-text">
+            Aplikasi ini dikembangkan sebagai bagian dari penelitian skripsi di bidang teknologi pendidikan. 
+            Tujuannya adalah menghadirkan asesmen yang tidak hanya mengevaluasi, tetapi juga mendukung proses 
+            belajar siswa secara lebih mendalam melalui pendekatan Assessment for Learning dan Assessment as Learning.
+          </p>
+          <div class="about-chips">
+            <div class="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 002-2v-5"/></svg>
+              <a href="https://pti.fkip.unila.ac.id/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; border-bottom: 1px dashed var(--primary);">Pendidikan Teknologi Informasi Universitas Lampung</a>
+            </div>
+            <div class="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+              Informatika SMP
+            </div>
+            <div class="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              2025–2026
+            </div>
+          </div>
+          <div class="about-researcher">
+            <div class="about-researcher-avatar" aria-hidden="true">P</div>
+            <div class="about-researcher-info">
+              <div class="about-researcher-name">Nestyo Rizky Prasetyo</div>
+              <div class="about-researcher-role">Peneliti / Developer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== MODAL ==================== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Panduan Install per Merk HP</h2>
+        <button class="modal-close" onclick="closeModal()" aria-label="Tutup modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="accordion" id="accordion">
+          <!-- Samsung -->
+          <div class="accordion-item active" id="accordion-samsung">
+            <button class="accordion-trigger" onclick="toggleAccordion('accordion-samsung')" aria-expanded="true">
+              <span>Samsung</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-inner">
+                <ol>
+                  <li>Buka <strong>Pengaturan</strong></li>
+                  <li>Ketuk <strong>"Aplikasi"</strong> atau <strong>"Aplikasi & Notifikasi"</strong></li>
+                  <li>Ketuk menu <strong>⋮ (titik tiga)</strong> → <strong>"Akses Khusus"</strong></li>
+                  <li>Pilih <strong>"Install aplikasi tidak dikenal"</strong></li>
+                  <li>Cari browser yang kamu pakai → <strong>aktifkan toggle</strong></li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <!-- Xiaomi -->
+          <div class="accordion-item" id="accordion-xiaomi">
+            <button class="accordion-trigger" onclick="toggleAccordion('accordion-xiaomi')" aria-expanded="false">
+              <span>Xiaomi / MIUI</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-inner">
+                <ol>
+                  <li>Buka <strong>Pengaturan</strong></li>
+                  <li>Masuk ke <strong>"Privasi"</strong> → <strong>"Keamanan Khusus"</strong></li>
+                  <li>Ketuk <strong>"Install aplikasi tidak dikenal"</strong></li>
+                  <li>Aktifkan untuk browser yang kamu gunakan</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <!-- Oppo -->
+          <div class="accordion-item" id="accordion-oppo">
+            <button class="accordion-trigger" onclick="toggleAccordion('accordion-oppo')" aria-expanded="false">
+              <span>Oppo / ColorOS</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-inner">
+                <ol>
+                  <li>Buka <strong>Pengaturan</strong></li>
+                  <li>Ketuk <strong>"Keamanan"</strong> → <strong>"Install aplikasi pihak ketiga"</strong></li>
+                  <li>Aktifkan untuk browser yang kamu gunakan</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Setelah install selesai, kamu bisa menonaktifkan kembali izin ini untuk keamanan.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="logo.png" alt="Logo Integrated Asesment" width="32" height="32">
+            <span>Integrated Asesment</span>
+          </div>
+          <p>Asesmen Bermakna untuk Pembelajaran yang Lebih Dalam. Dirancang khusus untuk membantu siswa SMP belajar secara lebih mendalam dan reflektif.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Link Cepat</h4>
+          <ul>
+            <li><a href="[URL_APK]" id="btn-download-footer">Download Aplikasi</a></li>
+            <li><a href="[URL_WEB_GURU]" target="_blank" rel="noopener noreferrer" id="btn-guru-footer">Masuk Guru</a></li>
+            <li><a href="#panduan">Panduan Install</a></li>
+            <li><a href="#fitur">Fitur</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Nestyo Rizky Prasetyo. Dibuat untuk keperluan penelitian skripsi.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== NAVBAR SCROLL ====================
+    const navbar = document.getElementById('navbar');
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const navOverlay = document.getElementById('navOverlay');
+
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ==================== HAMBURGER MENU ====================
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+    navOverlay.addEventListener('click', toggleMenu);
+
+    // Close menu on nav link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (navLinks.classList.contains('active')) {
+          toggleMenu();
+        }
+      });
+    });
+
+    // ==================== SMOOTH SCROLL ====================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ==================== INTERSECTION OBSERVER ====================
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll, .step-card').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ==================== MODAL ====================
+    const modalOverlay = document.getElementById('modalOverlay');
+
+    function openModal() {
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // Focus trap
+      const modal = document.getElementById('modal');
+      modal.querySelector('.modal-close').focus();
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on overlay click
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ==================== ACCORDION ====================
+    function toggleAccordion(id) {
+      const item = document.getElementById(id);
+      const isActive = item.classList.contains('active');
+      
+      // Close all
+      document.querySelectorAll('.accordion-item').forEach(el => {
+        el.classList.remove('active');
+        el.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+      });
+      
+      // Open clicked if it was closed
+      if (!isActive) {
+        item.classList.add('active');
+        item.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // ==================== INITIAL ANIMATIONS ====================
+    // Trigger initial check for elements in viewport
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.animate-on-scroll, .step-card').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('visible');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
